@@ -11,13 +11,15 @@ class LoginController {
 
   userLogin = async (req: Request, res: Response) => {
     const login = req.body;
-
     const result = await this.loginService.userLogin(login);
     const { status, message } = result;
-    // if (result === undefined) {
-    //   return res.status(401).json({ message: 'Email or passaword invalid' });
-    // }
-    // const loginToken = tokenize(login);
+    return res.status(status).json(message);
+  };
+
+  userValidate = async (req: Request, res: Response) => {
+    const { authorization } = req.headers;
+    const result = await this.loginService.userValidate(authorization);
+    const { status, message } = result;
     return res.status(status).json(message);
   };
 }

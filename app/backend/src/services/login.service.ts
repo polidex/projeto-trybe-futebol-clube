@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs';
 import UserModel from '../database/models/userModel';
 import ILogin from '../interfaces/login.interface';
-import { tokenize } from '../utilities/tokenize';
+import { tokenize, untokenize } from '../utilities/tokenize';
 
 class LoginService {
   userModel: UserModel;
@@ -11,27 +11,27 @@ class LoginService {
   }
 
   userLogin = async (login: ILogin) => {
-    // const { email, password } = login;
-
-    // const user = await UserModel.findOne({ where: { email, password } });
-    // // console.log('--------------->', user?.dataValues.id);
-    // if (user === null) {
-    //   return ({ message: 'Incorrect email or password' });
-    // } const loginToken = tokenize(user);
-
-    // return { token: loginToken };
     const user = await UserModel.findOne({ where: { email: login.email } });
 
     if (user) {
       const comparePassword = await compare(login.password, user.dataValues.password);
       if (comparePassword) {
-        const { id, username } = user;
-        const loginToken = tokenize({ id, username });
+        const { id, username, role } = user;
+        const loginToken = tokenize({ id, username, role });
 
         return { status: 200, message: { token: loginToken } };
       }
     }
     return ({ status: 401, message: { message: 'Incorrect email or password' } });
+  };
+
+  userValidate = async (authorization: string | undefined) => {
+    if (authorization) {
+      const validUser = untokenize(authorization);
+      console.log('------------->', validUser);
+      return { status: 200, message: { role: validUser.role } };
+    }
+    return { status: 401, message: 'Invalid token' };
   };
 }
 
