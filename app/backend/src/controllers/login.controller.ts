@@ -13,11 +13,12 @@ class LoginController {
     const login = req.body;
 
     const result = await this.loginService.userLogin(login);
+    const { status, message } = result;
     // if (result === undefined) {
     //   return res.status(401).json({ message: 'Email or passaword invalid' });
     // }
     // const loginToken = tokenize(login);
-    return res.status(200).json(result);
+    return res.status(status).json(message);
   };
 }
 

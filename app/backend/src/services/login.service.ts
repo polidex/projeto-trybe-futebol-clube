@@ -1,3 +1,4 @@
+import { compare } from 'bcryptjs';
 import UserModel from '../database/models/userModel';
 import ILogin from '../interfaces/login.interface';
 import { tokenize } from '../utilities/tokenize';
@@ -10,15 +11,27 @@ class LoginService {
   }
 
   userLogin = async (login: ILogin) => {
-    const { email, password } = login;
+    // const { email, password } = login;
 
-    const user = await UserModel.findOne({ where: { email, password } });
-    // console.log('--------------->', user?.dataValues.id);
-    if (user === null) {
-      return ({ message: 'Email or passaword invalid' });
-    } const loginToken = tokenize(user);
+    // const user = await UserModel.findOne({ where: { email, password } });
+    // // console.log('--------------->', user?.dataValues.id);
+    // if (user === null) {
+    //   return ({ message: 'Incorrect email or password' });
+    // } const loginToken = tokenize(user);
 
-    return { token: loginToken };
+    // return { token: loginToken };
+    const user = await UserModel.findOne({ where: { email: login.email } });
+
+    if (user) {
+      const comparePassword = await compare(login.password, user.dataValues.password);
+      if (comparePassword) {
+        const { id, username } = user;
+        const loginToken = tokenize({ id, username });
+
+        return { status: 200, message: { token: loginToken } };
+      }
+    }
+    return ({ status: 401, message: { message: 'Incorrect email or password' } });
   };
 }
 
