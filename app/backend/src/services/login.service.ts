@@ -28,7 +28,6 @@ class LoginService {
   userValidate = async (authorization: string | undefined) => {
     if (authorization) {
       const validUser = untokenize(authorization);
-      console.log('------------->', validUser);
       return { status: 200, message: { role: validUser.role } };
     }
     return { status: 401, message: 'Invalid token' };

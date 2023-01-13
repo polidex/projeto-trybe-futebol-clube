@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import LoginService from '../services/login.service';
-// import { tokenize } from '../utilities/tokenize';
 
 class LoginController {
   loginService: LoginService;
