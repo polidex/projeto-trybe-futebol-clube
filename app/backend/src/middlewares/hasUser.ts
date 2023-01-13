@@ -8,7 +8,7 @@ const hasUser = async (req: Request, res: Response, next: NextFunction) => {
 
   if (user) {
     const decryptedPassword = await compare(password, user.password);
-    if (!user &&  !decryptedPassword) {
+    if (!user && !decryptedPassword) {
       return res.status(401).json({ message: 'Incorrect email or password' });
     }
   }
