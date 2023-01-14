@@ -9,6 +9,13 @@ class MatchController {
   }
 
   getMatches = async (req: Request, res: Response) => {
+    const { inProgress } = req.query;
+
+    if (inProgress) {
+      const inProgressTrue = inProgress === 'true';
+      const result = await this.matchService.getMatchesInProgress(inProgressTrue);
+      return res.status(result.status).json(result.message);
+    }
     const result = await this.matchService.getMatches();
     return res.status(result.status).json(result.message);
   };

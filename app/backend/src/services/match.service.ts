@@ -17,6 +17,17 @@ class MatchService {
     });
     return { status: 200, message: matches };
   };
+
+  getMatchesInProgress = async (isInProgress: boolean) => {
+    const matches = await MatchModel.findAll({
+      include: [
+        { model: Team, as: 'teamHome', attributes: ['teamName'] },
+        { model: Team, as: 'teamAway', attributes: ['teamName'] },
+      ],
+      where: { inProgress: isInProgress },
+    });
+    return { status: 200, message: matches };
+  };
 }
 
 export default MatchService;
