@@ -1,5 +1,7 @@
+import IMatch from '../interfaces/match.interface';
 import MatchModel from '../database/models/matchModel';
 import Team from '../database/models/teamModel';
+import TeamService from './team.service';
 
 class MatchService {
   matchModel: MatchModel;
@@ -27,6 +29,15 @@ class MatchService {
       where: { inProgress: isInProgress },
     });
     return { status: 200, message: matches };
+  };
+
+  createMatch = async (newMatch: IMatch) => {
+    const { homeTeam, awayTeam } = newMatch;
+    const teamService = new TeamService();
+    await teamService.getTeamsById(`${homeTeam}`);
+    await teamService.getTeamsById(`${awayTeam}`);
+    const match = await MatchModel.create({ ...newMatch, inProgress: true });
+    return { status: 201, message: match };
   };
 }
 
