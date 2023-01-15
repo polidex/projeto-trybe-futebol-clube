@@ -25,6 +25,12 @@ class MatchController {
     const result = await this.matchService.createMatch(newMatch);
     return res.status(result.status).json(result.message);
   };
+
+  finishMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await this.matchService.finishMatch(id);
+    return res.status(result.status).json(result.message);
+  };
 }
 
 export default MatchController;

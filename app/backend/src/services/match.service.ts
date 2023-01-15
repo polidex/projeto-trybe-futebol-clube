@@ -39,6 +39,11 @@ class MatchService {
     const match = await MatchModel.create({ ...newMatch, inProgress: true });
     return { status: 201, message: match };
   };
+
+  finishMatch = async (id: string | undefined) => {
+    await MatchModel.update({ inProgress: false }, { where: { id } });
+    return { status: 200, message: 'Finished' };
+  };
 }
 
 export default MatchService;
