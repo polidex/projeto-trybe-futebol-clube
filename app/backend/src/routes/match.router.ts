@@ -12,6 +12,8 @@ matchRouter.get('/', matchController.getMatches);
 
 matchRouter.post('/', tokenAuth, isEqualTeams, hasTeam, matchController.createMatch);
 
+matchRouter.patch('/:id', matchController.updateMatch);
+
 matchRouter.patch('/:id/finish', matchController.finishMatch);
 
 export default matchRouter;

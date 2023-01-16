@@ -22,13 +22,23 @@ class MatchController {
 
   createMatch = async (req: Request, res: Response) => {
     const newMatch = req.body;
+
     const result = await this.matchService.createMatch(newMatch);
     return res.status(result.status).json(result.message);
   };
 
   finishMatch = async (req: Request, res: Response) => {
     const { id } = req.params;
+
     const result = await this.matchService.finishMatch(id);
+    return res.status(result.status).json(result.message);
+  };
+
+  updateMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const matchUpdate = req.body;
+
+    const result = await this.matchService.updateMatch(id, matchUpdate);
     return res.status(result.status).json(result.message);
   };
 }
