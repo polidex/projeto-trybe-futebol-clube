@@ -1,8 +1,7 @@
 import IMatch from '../interfaces/match.interface';
 import IMatchUpdate from '../interfaces/MatchUpdate.interface';
 import MatchModel from '../database/models/matchModel';
-import Team from '../database/models/teamModel';
-import TeamService from './team.service';
+import TeamModel from '../database/models/teamModel';
 
 class MatchService {
   matchModel: MatchModel;
@@ -14,8 +13,8 @@ class MatchService {
   getMatches = async () => {
     const matches = await MatchModel.findAll({
       include: [
-        { model: Team, as: 'teamHome', attributes: ['teamName'] },
-        { model: Team, as: 'teamAway', attributes: ['teamName'] },
+        { model: TeamModel, as: 'teamHome', attributes: ['teamName'] },
+        { model: TeamModel, as: 'teamAway', attributes: ['teamName'] },
       ],
     });
     return { status: 200, message: matches };
@@ -24,8 +23,8 @@ class MatchService {
   getMatchesInProgress = async (isInProgress: boolean) => {
     const matches = await MatchModel.findAll({
       include: [
-        { model: Team, as: 'teamHome', attributes: ['teamName'] },
-        { model: Team, as: 'teamAway', attributes: ['teamName'] },
+        { model: TeamModel, as: 'teamHome', attributes: ['teamName'] },
+        { model: TeamModel, as: 'teamAway', attributes: ['teamName'] },
       ],
       where: { inProgress: isInProgress },
     });
@@ -33,10 +32,6 @@ class MatchService {
   };
 
   createMatch = async (newMatch: IMatch) => {
-    const { homeTeam, awayTeam } = newMatch;
-    const teamService = new TeamService();
-    await teamService.getTeamsById(`${homeTeam}`);
-    await teamService.getTeamsById(`${awayTeam}`);
     const match = await MatchModel.create({ ...newMatch, inProgress: true });
     return { status: 201, message: match };
   };

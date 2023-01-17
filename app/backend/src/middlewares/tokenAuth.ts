@@ -3,14 +3,15 @@ import { untokenize } from '../utilities/tokenize';
 
 const tokenAuth = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
-
-  if (authorization) {
-    const user = untokenize(authorization);
-    if (!user.role) {
-      return res.status(404).json({ message: 'There is no team with such id!' });
-    }
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token must be provided' });
   }
-  next();
+  try {
+    untokenize(authorization);
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Token must be a valid token' });
+  }
 };
 
 export default tokenAuth;

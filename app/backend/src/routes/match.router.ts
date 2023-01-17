@@ -10,7 +10,7 @@ const matchController = new MatchController();
 
 matchRouter.get('/', matchController.getMatches);
 
-matchRouter.post('/', tokenAuth, isEqualTeams, hasTeam, matchController.createMatch);
+matchRouter.post('/', tokenAuth, hasTeam, isEqualTeams, matchController.createMatch);
 
 matchRouter.patch('/:id', matchController.updateMatch);
 
